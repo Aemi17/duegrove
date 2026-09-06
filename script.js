@@ -2,6 +2,8 @@ const $ = (selector) => document.querySelector(selector);
 
 const STORAGE_KEY = "duegrove.savedInvoices.v1";
 const LEGACY_STORAGE_KEY = "invoxa.savedInvoices.v1";
+const BUSINESS_PROFILE_KEY = "duegrove.businessProfile.v1";
+const CLIENTS_KEY = "duegrove.savedClients.v1";
 
 const fields = {
   businessName: $("#businessName"),
@@ -38,6 +40,7 @@ const preview = {
   discountLabel: $("#discountLabel"),
   taxLabel: $("#taxLabel"),
   currency: $("#previewCurrency"),
+  businessLogo: $("#previewBusinessLogo"),
 };
 
 const itemsEditor = $("#itemsEditor");
@@ -57,10 +60,300 @@ const savedEmpty = $("#savedEmpty");
 const draftStatus = $(".draft-status");
 const draftStatusText = $("#draftStatusText");
 
+const saveBusinessProfileButton = $("#saveBusinessProfile");
+const businessLogoInput = $("#businessLogo");
+const logoPreview = $("#logoPreview");
+const logoPlaceholder = $("#logoPlaceholder");
+const removeLogoButton = $("#removeLogo");
+const businessProfileNote = $("#businessProfileNote");
+
+const savedClientSelect = $("#savedClientSelect");
+const useSavedClientButton = $("#useSavedClient");
+const saveClientButton = $("#saveClient");
+const deleteSavedClientButton = $("#deleteSavedClient");
+
+const templateButtons = document.querySelectorAll("[data-template-value]");
+const invoicePaper = $("#invoicePaper");
+const toast = $("#toast");
+
 let items = [];
 let currentInvoiceId = null;
 let currentInvoiceCreatedAt = null;
 let isDirty = false;
+let businessLogoDataUrl = "";
+let currentTemplate = "grove";
+let toastTimer = null;
+
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  window.clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2200);
+}
+
+function getBusinessProfile() {
+  try {
+    const profile = JSON.parse(localStorage.getItem(BUSINESS_PROFILE_KEY));
+    return profile && typeof profile === "object" ? profile : null;
+  } catch (error) {
+    console.warn("Could not read business profile:", error);
+    return null;
+  }
+}
+
+function saveBusinessProfile() {
+  const profile = {
+    businessName: fields.businessName.value,
+    businessEmail: fields.businessEmail.value,
+    businessAddress: fields.businessAddress.value,
+    logoDataUrl: businessLogoDataUrl,
+    updatedAt: new Date().toISOString(),
+  };
+
+  try {
+    localStorage.setItem(BUSINESS_PROFILE_KEY, JSON.stringify(profile));
+    businessProfileNote.textContent = "Default business details saved on this device.";
+    showToast("Business details saved as default");
+  } catch (error) {
+    console.error("Could not save business profile:", error);
+    alert("Your business profile could not be saved in this browser.");
+  }
+}
+
+function applyBusinessProfile(profile = getBusinessProfile()) {
+  if (!profile) return false;
+
+  fields.businessName.value = profile.businessName || "";
+  fields.businessEmail.value = profile.businessEmail || "";
+  fields.businessAddress.value = profile.businessAddress || "";
+  businessLogoDataUrl = profile.logoDataUrl || "";
+
+  updateLogoUI();
+  updatePreview();
+
+  businessProfileNote.textContent = "Using your saved default business details.";
+  return true;
+}
+
+function updateLogoUI() {
+  if (businessLogoDataUrl) {
+    logoPreview.src = businessLogoDataUrl;
+    logoPreview.hidden = false;
+    logoPlaceholder.hidden = true;
+
+    preview.businessLogo.src = businessLogoDataUrl;
+    preview.businessLogo.hidden = false;
+  } else {
+    logoPreview.removeAttribute("src");
+    logoPreview.hidden = true;
+    logoPlaceholder.hidden = false;
+
+    preview.businessLogo.removeAttribute("src");
+    preview.businessLogo.hidden = true;
+  }
+}
+
+async function processLogoFile(file) {
+  if (!file) return;
+
+  const allowedTypes = ["image/png", "image/jpeg", "image/webp"];
+
+  if (!allowedTypes.includes(file.type)) {
+    alert("Please choose a PNG, JPG, JPEG or WebP image.");
+    businessLogoInput.value = "";
+    return;
+  }
+
+  if (file.size > 4 * 1024 * 1024) {
+    alert("Please choose an image smaller than 4 MB.");
+    businessLogoInput.value = "";
+    return;
+  }
+
+  const dataUrl = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+  const image = await new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+
+  const maxWidth = 520;
+  const maxHeight = 260;
+  const ratio = Math.min(maxWidth / image.width, maxHeight / image.height, 1);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(image.width * ratio));
+  canvas.height = Math.max(1, Math.round(image.height * ratio));
+
+  const context = canvas.getContext("2d");
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  businessLogoDataUrl = canvas.toDataURL("image/png", 0.92);
+  businessLogoInput.value = "";
+
+  updateLogoUI();
+  markDirty();
+  updatePreview();
+  showToast("Logo added");
+}
+
+function getSavedClients() {
+  try {
+    const clients = JSON.parse(localStorage.getItem(CLIENTS_KEY));
+    return Array.isArray(clients) ? clients : [];
+  } catch (error) {
+    console.warn("Could not read saved clients:", error);
+    return [];
+  }
+}
+
+function writeSavedClients(clients) {
+  try {
+    localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
+    return true;
+  } catch (error) {
+    console.error("Could not save clients:", error);
+    alert("Saved clients could not be updated in this browser.");
+    return false;
+  }
+}
+
+function renderSavedClients(selectedId = "") {
+  const clients = getSavedClients().sort((a, b) =>
+    String(a.name || "").localeCompare(String(b.name || ""))
+  );
+
+  savedClientSelect.innerHTML = '<option value="">Choose a saved client…</option>';
+
+  clients.forEach((client) => {
+    const option = document.createElement("option");
+    option.value = client.id;
+    option.textContent = client.name || client.email || "Unnamed client";
+    savedClientSelect.appendChild(option);
+  });
+
+  if (selectedId && clients.some((client) => client.id === selectedId)) {
+    savedClientSelect.value = selectedId;
+  }
+}
+
+function saveCurrentClient() {
+  const name = fields.clientName.value.trim();
+  const email = fields.clientEmail.value.trim();
+  const address = fields.clientAddress.value.trim();
+
+  if (!name && !email) {
+    alert("Add at least a client name or email before saving.");
+    return;
+  }
+
+  const clients = getSavedClients();
+
+  const duplicate = clients.find(
+    (client) =>
+      (email && client.email?.toLowerCase() === email.toLowerCase()) ||
+      (!email && name && client.name?.toLowerCase() === name.toLowerCase())
+  );
+
+  let clientId;
+
+  if (duplicate) {
+    duplicate.name = name;
+    duplicate.email = email;
+    duplicate.address = address;
+    duplicate.updatedAt = new Date().toISOString();
+    clientId = duplicate.id;
+  } else {
+    clientId = crypto.randomUUID();
+    clients.push({
+      id: clientId,
+      name,
+      email,
+      address,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+  }
+
+  if (!writeSavedClients(clients)) return;
+
+  renderSavedClients(clientId);
+  showToast(duplicate ? "Saved client updated" : "Client saved");
+}
+
+function useSelectedClient() {
+  const id = savedClientSelect.value;
+
+  if (!id) {
+    alert("Choose a saved client first.");
+    return;
+  }
+
+  const client = getSavedClients().find((saved) => saved.id === id);
+
+  if (!client) return;
+
+  fields.clientName.value = client.name || "";
+  fields.clientEmail.value = client.email || "";
+  fields.clientAddress.value = client.address || "";
+
+  markDirty();
+  updatePreview();
+  showToast("Client details filled");
+}
+
+function deleteSelectedClient() {
+  const id = savedClientSelect.value;
+
+  if (!id) {
+    alert("Choose a saved client first.");
+    return;
+  }
+
+  const clients = getSavedClients();
+  const target = clients.find((client) => client.id === id);
+
+  if (!target) return;
+
+  if (!window.confirm(`Delete saved client “${target.name || target.email}”?`)) {
+    return;
+  }
+
+  if (!writeSavedClients(clients.filter((client) => client.id !== id))) return;
+
+  renderSavedClients();
+  showToast("Saved client deleted");
+}
+
+function setTemplate(template, shouldMarkDirty = true) {
+  const allowed = ["grove", "ledger", "minimal"];
+  currentTemplate = allowed.includes(template) ? template : "grove";
+
+  invoicePaper.dataset.template = currentTemplate;
+
+  templateButtons.forEach((button) => {
+    button.classList.toggle(
+      "active",
+      button.dataset.templateValue === currentTemplate
+    );
+  });
+
+  if (shouldMarkDirty) {
+    markDirty();
+  }
+}
 
 function migrateLegacyStorage() {
   try {
@@ -216,6 +509,8 @@ function collectInvoiceData() {
     businessName: fields.businessName.value,
     businessEmail: fields.businessEmail.value,
     businessAddress: fields.businessAddress.value,
+    logoDataUrl: businessLogoDataUrl,
+    template: currentTemplate,
 
     clientName: fields.clientName.value,
     clientEmail: fields.clientEmail.value,
@@ -241,6 +536,9 @@ function applyInvoiceData(invoice) {
   fields.businessName.value = invoice.businessName || "";
   fields.businessEmail.value = invoice.businessEmail || "";
   fields.businessAddress.value = invoice.businessAddress || "";
+  businessLogoDataUrl = invoice.logoDataUrl || "";
+  setTemplate(invoice.template || "grove", false);
+  updateLogoUI();
 
   fields.clientName.value = invoice.clientName || "";
   fields.clientEmail.value = invoice.clientEmail || "";
@@ -605,6 +903,8 @@ function renderPreviewItems() {
 }
 
 function updatePreview() {
+  updateLogoUI();
+
   preview.businessName.textContent = textOrFallback(
     fields.businessName.value,
     "Your Business"
@@ -672,6 +972,8 @@ function resetInvoice() {
   fields.businessName.value = "";
   fields.businessEmail.value = "";
   fields.businessAddress.value = "";
+  businessLogoDataUrl = "";
+  setTemplate("grove", false);
 
   fields.clientName.value = "";
   fields.clientEmail.value = "";
@@ -696,6 +998,20 @@ function resetInvoice() {
   ];
 
   renderItemsEditor();
+
+  const defaultProfile = getBusinessProfile();
+  if (defaultProfile) {
+    fields.businessName.value = defaultProfile.businessName || "";
+    fields.businessEmail.value = defaultProfile.businessEmail || "";
+    fields.businessAddress.value = defaultProfile.businessAddress || "";
+    businessLogoDataUrl = defaultProfile.logoDataUrl || "";
+    businessProfileNote.textContent = "Using your saved default business details.";
+  } else {
+    businessProfileNote.textContent =
+      "Save your details once and new invoices can start pre-filled.";
+  }
+
+  updateLogoUI();
   updatePreview();
 
   isDirty = false;
@@ -789,6 +1105,48 @@ async function downloadPDF() {
   }
 }
 
+
+saveBusinessProfileButton.addEventListener("click", saveBusinessProfile);
+
+businessLogoInput.addEventListener("change", async (event) => {
+  const file = event.target.files?.[0];
+
+  try {
+    await processLogoFile(file);
+  } catch (error) {
+    console.error("Logo processing failed:", error);
+    alert("That logo could not be processed. Please try another image.");
+    businessLogoInput.value = "";
+  }
+});
+
+removeLogoButton.addEventListener("click", () => {
+  if (!businessLogoDataUrl) return;
+
+  businessLogoDataUrl = "";
+  updateLogoUI();
+  markDirty();
+  updatePreview();
+  showToast("Logo removed");
+});
+
+saveClientButton.addEventListener("click", saveCurrentClient);
+useSavedClientButton.addEventListener("click", useSelectedClient);
+deleteSavedClientButton.addEventListener("click", deleteSelectedClient);
+
+savedClientSelect.addEventListener("change", () => {
+  if (savedClientSelect.value) {
+    useSelectedClient();
+  }
+});
+
+templateButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    setTemplate(button.dataset.templateValue);
+    updatePreview();
+  });
+});
+
 Object.values(fields).forEach((field) => {
   field.addEventListener("input", () => {
     markDirty();
@@ -823,4 +1181,5 @@ document.addEventListener("keydown", (event) => {
 
 migrateLegacyStorage();
 renderSavedInvoices();
+renderSavedClients();
 resetInvoice();

@@ -1,59 +1,64 @@
-# DueGrove V1.2
+# DueGrove V1.3
 
-A calm, privacy-friendly invoice generator for freelancers and small businesses, with local draft saving.
+DueGrove is a warm, lightweight invoice generator for freelancers and small businesses.
 
-## Features
+## V1.3 features
 
+### Invoice creation
 - Live invoice preview
-- Business + client information
+- Business and client information
 - Invoice number, issue date and due date
-- USD, EUR, GBP, MAD and CAD support
+- USD, EUR, GBP, MAD and CAD
 - Add/remove line items
-- Quantity and rate calculations
+- Quantity × rate calculations
 - Tax and discount percentages
 - Notes
 - Responsive interface
-- Reliable PDF export using html2canvas + jsPDF
+
+### PDF
+- Reliable PDF export with `html2canvas` + `jsPDF`
 - Browser print / Save as PDF fallback
-- Save invoice drafts locally in the browser
+
+### Local invoice drafts
+- Save invoice drafts in `localStorage`
 - Reopen saved invoices
-- Duplicate saved invoices
-- Delete saved invoices
-- Saved/unsaved change indicator
+- Duplicate invoices
+- Delete invoices
+- Saved/unsaved indicator
 - Ctrl/Cmd + S shortcut
+
+### New in V1.3
+- Upload a business logo
+- Logo is resized before local storage to reduce space usage
+- Save business details as the default for future invoices
+- Save reusable clients
+- Fill client details from a saved-client picker
+- Update/delete saved clients
+- Three invoice styles:
+  - Grove
+  - Ledger
+  - Minimal
+- Invoice style and logo are stored with saved invoice drafts
 
 ## Run it
 
-Open `index.html` in a browser, or use VS Code + Live Server.
+Open `index.html` or use VS Code + Live Server.
 
-## Important: local saving
+The PDF libraries are loaded from CDNs, so automatic PDF export requires internet access.
 
-Saved invoices use `localStorage`.
+## Privacy / storage
 
-That means drafts are stored only:
-- in the same browser
-- on the same device
-- until browser storage is cleared
+There is still no backend.
 
-V1.2 still has no account or cloud database, so drafts do not sync across devices.
+Invoices, business defaults and saved clients are stored only in the browser's `localStorage` on that device. Clearing browser site data removes them.
 
-## PDF export
+## Suggested next phase
 
-The automatic PDF button uses `html2canvas` and `jsPDF` from CDNs, so it needs an internet connection.
+Before V2, collect user feedback on:
+- default business profile
+- saved clients
+- invoice templates
+- logo upload
+- mobile usability
 
-If the export libraries cannot load, the app falls back to the browser print dialog.
-
-## Future V2 ideas
-
-- Accounts
-- Cloud database
-- Saved clients
-- Saved business profile
-- Invoice status (draft/sent/paid/overdue)
-- Premium invoice templates
-- Cross-device invoice history
-
-
-## Brand
-
-DueGrove uses a warm cream and deep green visual system inspired by premium stationery.
+V2 can then introduce accounts, a cloud database, cross-device syncing, saved invoice statuses, and premium functionality.

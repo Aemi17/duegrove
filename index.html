@@ -67,12 +67,49 @@
       </div>
 
       <div class="form-card">
-        <div class="section-heading">
-          <span class="step-number">01</span>
-          <div>
-            <h2>Your business</h2>
-            <p>Who is sending this invoice?</p>
+        <div class="section-heading section-heading-with-action">
+          <div class="section-heading">
+            <span class="step-number">01</span>
+            <div>
+              <h2>Your business</h2>
+              <p>Who is sending this invoice?</p>
+            </div>
           </div>
+
+          <button class="mini-action" id="saveBusinessProfile" type="button">
+            Save as default
+          </button>
+        </div>
+
+        <div class="business-tools">
+          <div class="logo-uploader">
+            <div class="logo-preview-shell" id="logoPreviewShell">
+              <span id="logoPlaceholder">Logo</span>
+              <img id="logoPreview" alt="Business logo preview" hidden />
+            </div>
+
+            <div>
+              <p class="tool-title">Business logo</p>
+              <p class="tool-help">PNG, JPG or WebP. We resize it for the invoice.</p>
+
+              <div class="inline-actions">
+                <label class="file-button" for="businessLogo">Upload logo</label>
+                <input
+                  id="businessLogo"
+                  class="visually-hidden"
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                />
+                <button class="link-button danger-link" id="removeLogo" type="button">
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <p class="saved-default-note" id="businessProfileNote">
+            Save your details once and new invoices can start pre-filled.
+          </p>
         </div>
 
         <div class="form-grid two-cols">
@@ -102,6 +139,23 @@
           </div>
         </div>
 
+        <div class="client-picker">
+          <label>
+            Saved client
+            <select id="savedClientSelect">
+              <option value="">Choose a saved client…</option>
+            </select>
+          </label>
+
+          <div class="client-picker-actions">
+            <button class="mini-action" id="useSavedClient" type="button">Use client</button>
+            <button class="mini-action" id="saveClient" type="button">Save client</button>
+            <button class="link-button danger-link" id="deleteSavedClient" type="button">
+              Delete saved
+            </button>
+          </div>
+        </div>
+
         <div class="form-grid two-cols">
           <label>
             Client name
@@ -126,6 +180,30 @@
           <div>
             <h2>Invoice details</h2>
             <p>Set the number, dates and currency.</p>
+          </div>
+        </div>
+
+        <div class="template-picker-block">
+          <div>
+            <p class="tool-title">Invoice style</p>
+            <p class="tool-help">Change the look without changing your invoice data.</p>
+          </div>
+
+          <div class="template-options" role="group" aria-label="Invoice style">
+            <button class="template-option active" type="button" data-template-value="grove">
+              <span class="template-swatch grove-swatch"></span>
+              Grove
+            </button>
+
+            <button class="template-option" type="button" data-template-value="ledger">
+              <span class="template-swatch ledger-swatch"></span>
+              Ledger
+            </button>
+
+            <button class="template-option" type="button" data-template-value="minimal">
+              <span class="template-swatch minimal-swatch"></span>
+              Minimal
+            </button>
           </div>
         </div>
 
@@ -219,14 +297,18 @@
       </div>
 
       <div class="paper-wrap">
-        <article class="invoice-paper" id="invoicePaper">
+        <article class="invoice-paper" id="invoicePaper" data-template="grove">
           <div class="invoice-accent"></div>
 
           <header class="invoice-header">
-            <div>
-              <p class="invoice-brand" id="previewBusinessName">Your Business</p>
-              <p class="muted" id="previewBusinessEmail">hello@example.com</p>
-              <p class="multiline muted" id="previewBusinessAddress">Your address</p>
+            <div class="invoice-business-identity">
+              <img id="previewBusinessLogo" class="invoice-logo" alt="" hidden />
+
+              <div>
+                <p class="invoice-brand" id="previewBusinessName">Your Business</p>
+                <p class="muted" id="previewBusinessEmail">hello@example.com</p>
+                <p class="multiline muted" id="previewBusinessAddress">Your address</p>
+              </div>
             </div>
 
             <div class="invoice-title-block">
@@ -331,6 +413,8 @@
       <p>Build an invoice and press “Save Invoice” to keep a draft here.</p>
     </div>
   </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 </body>
 </html>
