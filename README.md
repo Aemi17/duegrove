@@ -1,64 +1,74 @@
-# DueGrove V1.3
+# DueGrove V1.4
 
-DueGrove is a warm, lightweight invoice generator for freelancers and small businesses.
+DueGrove is a calm, lightweight invoice generator for freelancers and small businesses.
 
-## V1.3 features
+## Public structure
 
-### Invoice creation
+- `/` — product landing page
+- `/app/` — invoice generator
+
+## Landing page
+
+The public landing page includes:
+
+- DueGrove brand introduction
+- Primary "Create an invoice" CTA
+- Feature overview
+- How-it-works section
+- Privacy explanation
+- FAQ
+- Feedback link
+- SEO title and description
+- Open Graph / social metadata
+- Canonical URL
+- SVG favicon
+
+## Invoice app
+
+The invoice generator keeps the existing V1.3 functionality:
+
 - Live invoice preview
-- Business and client information
-- Invoice number, issue date and due date
-- USD, EUR, GBP, MAD and CAD
-- Add/remove line items
-- Quantity × rate calculations
-- Tax and discount percentages
-- Notes
-- Responsive interface
+- Business and client details
+- Business logo upload
+- Save business details as default
+- Saved clients
+- Grove, Ledger and Minimal invoice styles
+- Multiple currencies
+- Line items, tax and discount calculations
+- Local invoice drafts
+- Reopen / duplicate / delete drafts
+- PDF export
+- Responsive mobile layout
 
-### PDF
-- Reliable PDF export with `html2canvas` + `jsPDF`
-- Browser print / Save as PDF fallback
+V1.4 also adds:
 
-### Local invoice drafts
-- Save invoice drafts in `localStorage`
-- Reopen saved invoices
-- Duplicate invoices
-- Delete invoices
-- Saved/unsaved indicator
-- Ctrl/Cmd + S shortcut
-
-### New in V1.3
-- Upload a business logo
-- Logo is resized before local storage to reduce space usage
-- Save business details as the default for future invoices
-- Save reusable clients
-- Fill client details from a saved-client picker
-- Update/delete saved clients
-- Three invoice styles:
-  - Grove
-  - Ledger
-  - Minimal
-- Invoice style and logo are stored with saved invoice drafts
-
-## Run it
-
-Open `index.html` or use VS Code + Live Server.
-
-The PDF libraries are loaded from CDNs, so automatic PDF export requires internet access.
+- Link back to the main DueGrove landing page
+- Feedback button
+- Clear local-storage privacy note
+- Asset cache-busting for the public release
 
 ## Privacy / storage
 
-There is still no backend.
+DueGrove V1.4 does not use user accounts or a cloud database.
 
-Invoices, business defaults and saved clients are stored only in the browser's `localStorage` on that device. Clearing browser site data removes them.
+Saved invoices, clients, business defaults, and logos are stored locally in browser `localStorage` on the current device.
 
-## Suggested next phase
+Clearing browser site data may remove them, and they do not sync across devices.
 
-Before V2, collect user feedback on:
-- default business profile
-- saved clients
-- invoice templates
-- logo upload
-- mobile usability
+## Deploying to GitHub Pages
 
-V2 can then introduce accounts, a cloud database, cross-device syncing, saved invoice statuses, and premium functionality.
+Copy the contents of this folder into the existing `duegrove` Git repository, then:
+
+```bash
+git add .
+git commit -m "Release DueGrove V1.4"
+git push
+```
+
+GitHub Pages will serve the landing page from:
+
+`https://aemi17.github.io/duegrove/`
+
+and the invoice app from:
+
+`https://aemi17.github.io/duegrove/app/`

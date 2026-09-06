@@ -3,8 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Create polished invoices in seconds with DueGrove." />
-  <title>DueGrove — Simple Invoice Generator</title>
+
+  <title>DueGrove — Invoices, thoughtfully made.</title>
+  <meta
+    name="description"
+    content="Create polished invoices in minutes with DueGrove. No account required. Your invoice data stays in your browser."
+  />
+
+  <meta name="theme-color" content="#214b3b" />
+  <meta name="color-scheme" content="light" />
 
   <link rel="stylesheet" href="style.css?v=1.3.1" />
 
@@ -22,399 +29,274 @@
 </head>
 
 <body>
-  <header class="topbar">
-    <a class="brand" href="#" aria-label="DueGrove home">
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="DueGrove home">
       <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 40 40" role="img">
-          <path class="brand-stem" d="M20 30V15" />
-          <path class="brand-leaf" d="M20 18C13 18 9 14 9 8c6 0 11 3 11 10Z" />
-          <path class="brand-leaf" d="M20 22c7 0 11-4 11-10-6 0-11 3-11 10Z" />
+        <svg viewBox="0 0 48 48" role="img">
+          <path d="M34.7 10.2C26.1 10.6 18.4 14 14.3 20.1c-3.7 5.5-3.2 11.3-2.6 14.1 3.7-1.8 7.8-4.7 11.4-8.3 4.4-4.4 7.6-9.3 9.4-13.4-1.8 4.6-5.2 10.1-10 15-3.2 3.2-6.6 5.8-9.8 7.7 3.1 2.4 8.1 3.5 13.2 1.3 8.1-3.4 11.7-13.8 8.8-26.3Z"/>
         </svg>
       </span>
-      <span class="brand-name">DueGrove</span>
+      <span>DueGrove</span>
     </a>
 
-    <div class="topbar-actions">
-      <button class="btn btn-secondary" id="savedInvoicesButton" type="button">
-        Saved <span class="saved-count" id="savedCount">0</span>
-      </button>
-
-      <button class="btn btn-secondary" id="resetInvoice" type="button">
-        New Invoice
-      </button>
-
-      <button class="btn btn-secondary btn-save" id="saveInvoice" type="button">
-        Save Invoice
-      </button>
-
-      <button class="btn btn-primary" id="downloadPdf" type="button">
-        Download PDF
-      </button>
-    </div>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#faq">FAQ</a>
+      <a class="nav-cta" href="app/">Create invoice</a>
+    </nav>
   </header>
 
-  <main class="app-shell">
-    <section class="builder">
-      <div class="builder-heading">
-        <p class="eyebrow">Simple invoicing</p>
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Simple invoicing for independent work</p>
         <h1>Invoices, thoughtfully made.</h1>
-        <p>Create a polished invoice, preview it as you type, and save it as a PDF when you’re ready.</p>
+        <p class="hero-text">
+          Create polished invoices in minutes, save reusable client details,
+          choose a clean invoice style, and export to PDF — without creating an account.
+        </p>
 
-        <div class="draft-status">
-          <span class="draft-status-dot" id="draftStatusDot"></span>
-          <span id="draftStatusText">Unsaved invoice</span>
+        <div class="hero-actions">
+          <a class="button button-primary" href="app/">Create an invoice</a>
+          <a class="button button-secondary" href="#how-it-works">See how it works</a>
+        </div>
+
+        <div class="trust-row" aria-label="Product highlights">
+          <span>No account required</span>
+          <span>Local browser storage</span>
+          <span>PDF export</span>
         </div>
       </div>
 
-      <div class="form-card">
-        <div class="section-heading section-heading-with-action">
-          <div class="section-heading">
-            <span class="step-number">01</span>
-            <div>
-              <h2>Your business</h2>
-              <p>Who is sending this invoice?</p>
-            </div>
+      <div class="hero-visual" aria-label="Invoice preview illustration">
+        <div class="preview-window">
+          <div class="preview-top">
+            <span class="window-dot"></span>
+            <span class="window-dot"></span>
+            <span class="window-dot"></span>
+            <span class="preview-label">Invoice preview</span>
           </div>
 
-          <button class="mini-action" id="saveBusinessProfile" type="button">
-            Save as default
-          </button>
-        </div>
+          <div class="invoice-card">
+            <div class="invoice-accent"></div>
 
-        <div class="business-tools">
-          <div class="logo-uploader">
-            <div class="logo-preview-shell" id="logoPreviewShell">
-              <span id="logoPlaceholder">Logo</span>
-              <img id="logoPreview" alt="Business logo preview" hidden />
-            </div>
+            <div class="invoice-card-head">
+              <div>
+                <div class="mini-logo">DG</div>
+                <p class="invoice-name">Greenline Studio</p>
+                <p class="invoice-muted">Tangier, Morocco</p>
+              </div>
 
-            <div>
-              <p class="tool-title">Business logo</p>
-              <p class="tool-help">PNG, JPG or WebP. We resize it for the invoice.</p>
-
-              <div class="inline-actions">
-                <label class="file-button" for="businessLogo">Upload logo</label>
-                <input
-                  id="businessLogo"
-                  class="visually-hidden"
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                />
-                <button class="link-button danger-link" id="removeLogo" type="button">
-                  Remove
-                </button>
+              <div class="invoice-heading">
+                <strong>INVOICE</strong>
+                <span>INV-0148</span>
               </div>
             </div>
-          </div>
 
-          <p class="saved-default-note" id="businessProfileNote">
-            Save your details once and new invoices can start pre-filled.
-          </p>
-        </div>
+            <div class="invoice-bill-row">
+              <div>
+                <span class="label">BILL TO</span>
+                <strong>North & Co.</strong>
+                <p>Casablanca, Morocco</p>
+              </div>
 
-        <div class="form-grid two-cols">
-          <label>
-            Business / freelancer name
-            <input id="businessName" type="text" placeholder="Aemi Studio" autocomplete="organization" />
-          </label>
+              <div class="date-stack">
+                <span>06 Sep 2026</span>
+                <span>20 Sep 2026</span>
+              </div>
+            </div>
 
-          <label>
-            Email
-            <input id="businessEmail" type="email" placeholder="hello@example.com" autocomplete="email" />
-          </label>
-        </div>
+            <div class="mini-table">
+              <div class="mini-table-head">
+                <span>Description</span><span>Qty</span><span>Amount</span>
+              </div>
+              <div class="mini-table-row">
+                <span>Website design</span><span>1</span><span>800 MAD</span>
+              </div>
+              <div class="mini-table-row">
+                <span>Responsive fixes</span><span>2</span><span>300 MAD</span>
+              </div>
+            </div>
 
-        <label>
-          Address
-          <textarea id="businessAddress" rows="3" placeholder="Tangier, Morocco"></textarea>
-        </label>
-      </div>
-
-      <div class="form-card">
-        <div class="section-heading">
-          <span class="step-number">02</span>
-          <div>
-            <h2>Client details</h2>
-            <p>Who are you billing?</p>
-          </div>
-        </div>
-
-        <div class="client-picker">
-          <label>
-            Saved client
-            <select id="savedClientSelect">
-              <option value="">Choose a saved client…</option>
-            </select>
-          </label>
-
-          <div class="client-picker-actions">
-            <button class="mini-action" id="useSavedClient" type="button">Use client</button>
-            <button class="mini-action" id="saveClient" type="button">Save client</button>
-            <button class="link-button danger-link" id="deleteSavedClient" type="button">
-              Delete saved
-            </button>
-          </div>
-        </div>
-
-        <div class="form-grid two-cols">
-          <label>
-            Client name
-            <input id="clientName" type="text" placeholder="Sarah Smith" />
-          </label>
-
-          <label>
-            Client email
-            <input id="clientEmail" type="email" placeholder="sarah@example.com" />
-          </label>
-        </div>
-
-        <label>
-          Client address
-          <textarea id="clientAddress" rows="3" placeholder="Paris, France"></textarea>
-        </label>
-      </div>
-
-      <div class="form-card">
-        <div class="section-heading">
-          <span class="step-number">03</span>
-          <div>
-            <h2>Invoice details</h2>
-            <p>Set the number, dates and currency.</p>
-          </div>
-        </div>
-
-        <div class="template-picker-block">
-          <div>
-            <p class="tool-title">Invoice style</p>
-            <p class="tool-help">Change the look without changing your invoice data.</p>
-          </div>
-
-          <div class="template-options" role="group" aria-label="Invoice style">
-            <button class="template-option active" type="button" data-template-value="grove">
-              <span class="template-swatch grove-swatch"></span>
-              Grove
-            </button>
-
-            <button class="template-option" type="button" data-template-value="ledger">
-              <span class="template-swatch ledger-swatch"></span>
-              Ledger
-            </button>
-
-            <button class="template-option" type="button" data-template-value="minimal">
-              <span class="template-swatch minimal-swatch"></span>
-              Minimal
-            </button>
-          </div>
-        </div>
-
-        <div class="form-grid two-cols">
-          <label>
-            Invoice number
-            <input id="invoiceNumber" type="text" />
-          </label>
-
-          <label>
-            Currency
-            <select id="currency">
-              <option value="USD">USD — US Dollar</option>
-              <option value="EUR">EUR — Euro</option>
-              <option value="GBP">GBP — British Pound</option>
-              <option value="MAD" selected>MAD — Moroccan Dirham</option>
-              <option value="CAD">CAD — Canadian Dollar</option>
-            </select>
-          </label>
-
-          <label>
-            Invoice date
-            <input id="invoiceDate" type="date" />
-          </label>
-
-          <label>
-            Due date
-            <input id="dueDate" type="date" />
-          </label>
-        </div>
-      </div>
-
-      <div class="form-card">
-        <div class="section-heading section-heading-with-action">
-          <div class="section-heading">
-            <span class="step-number">04</span>
-            <div>
-              <h2>Items</h2>
-              <p>Add the services or products you are charging for.</p>
+            <div class="invoice-total">
+              <span>Total</span>
+              <strong>1,100 MAD</strong>
             </div>
           </div>
-
-          <button class="text-button" id="addItem" type="button">+ Add item</button>
         </div>
-
-        <div class="items-header" aria-hidden="true">
-          <span>Description</span>
-          <span>Qty</span>
-          <span>Rate</span>
-          <span></span>
-        </div>
-
-        <div id="itemsEditor" class="items-editor"></div>
-      </div>
-
-      <div class="form-card">
-        <div class="section-heading">
-          <span class="step-number">05</span>
-          <div>
-            <h2>Totals & notes</h2>
-            <p>Optional adjustments and a message for your client.</p>
-          </div>
-        </div>
-
-        <div class="form-grid two-cols">
-          <label>
-            Tax %
-            <input id="taxRate" type="number" min="0" step="0.01" value="0" />
-          </label>
-
-          <label>
-            Discount %
-            <input id="discountRate" type="number" min="0" max="100" step="0.01" value="0" />
-          </label>
-        </div>
-
-        <label>
-          Notes
-          <textarea id="notes" rows="4" placeholder="Thank you for your business."></textarea>
-        </label>
       </div>
     </section>
 
-    <aside class="preview-panel">
-      <div class="preview-toolbar">
-        <div>
-          <span class="status-dot"></span>
-          Live preview
-        </div>
-        <span>A4</span>
+    <section class="section" id="features">
+      <div class="section-heading">
+        <p class="eyebrow">What DueGrove does</p>
+        <h2>Everything you need for a clean invoice.</h2>
+        <p>
+          DueGrove keeps the workflow focused so you can create, save, reuse, and export without
+          digging through accounting software.
+        </p>
       </div>
 
-      <div class="paper-wrap">
-        <article class="invoice-paper" id="invoicePaper" data-template="grove">
-          <div class="invoice-accent"></div>
+      <div class="feature-grid">
+        <article class="feature-card">
+          <span class="feature-number">01</span>
+          <h3>Live invoice preview</h3>
+          <p>See the finished invoice update as you type, including totals, tax, discounts, and notes.</p>
+        </article>
 
-          <header class="invoice-header">
-            <div class="invoice-business-identity">
-              <img id="previewBusinessLogo" class="invoice-logo" alt="" hidden />
+        <article class="feature-card">
+          <span class="feature-number">02</span>
+          <h3>Reusable business details</h3>
+          <p>Save your business details and logo once so new invoices can start already filled in.</p>
+        </article>
 
-              <div>
-                <p class="invoice-brand" id="previewBusinessName">Your Business</p>
-                <p class="muted" id="previewBusinessEmail">hello@example.com</p>
-                <p class="multiline muted" id="previewBusinessAddress">Your address</p>
-              </div>
-            </div>
+        <article class="feature-card">
+          <span class="feature-number">03</span>
+          <h3>Saved clients</h3>
+          <p>Keep frequently used client details in your browser and fill them into a new invoice in one click.</p>
+        </article>
 
-            <div class="invoice-title-block">
-              <h2>INVOICE</h2>
-              <p id="previewInvoiceNumber">INV-0001</p>
-            </div>
-          </header>
+        <article class="feature-card">
+          <span class="feature-number">04</span>
+          <h3>Three invoice styles</h3>
+          <p>Choose Grove, Ledger, or Minimal without changing your invoice information.</p>
+        </article>
 
-          <div class="invoice-meta">
-            <div>
-              <p class="meta-label">BILL TO</p>
-              <p class="meta-strong" id="previewClientName">Client name</p>
-              <p class="muted" id="previewClientEmail">client@example.com</p>
-              <p class="multiline muted" id="previewClientAddress">Client address</p>
-            </div>
+        <article class="feature-card">
+          <span class="feature-number">05</span>
+          <h3>Local invoice drafts</h3>
+          <p>Save, reopen, duplicate, and delete invoice drafts directly from your browser.</p>
+        </article>
 
-            <div class="dates">
-              <div>
-                <span>Invoice date</span>
-                <strong id="previewInvoiceDate">—</strong>
-              </div>
-              <div>
-                <span>Due date</span>
-                <strong id="previewDueDate">—</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="invoice-table">
-            <div class="invoice-table-head">
-              <span>Description</span>
-              <span>Qty</span>
-              <span>Rate</span>
-              <span>Amount</span>
-            </div>
-            <div id="previewItems"></div>
-          </div>
-
-          <div class="invoice-bottom">
-            <div class="notes-block">
-              <p class="meta-label">NOTES</p>
-              <p class="multiline muted" id="previewNotes">Thank you for your business.</p>
-            </div>
-
-            <div class="totals">
-              <div>
-                <span>Subtotal</span>
-                <strong id="previewSubtotal">MAD 0.00</strong>
-              </div>
-
-              <div>
-                <span id="discountLabel">Discount (0%)</span>
-                <strong id="previewDiscount">- MAD 0.00</strong>
-              </div>
-
-              <div>
-                <span id="taxLabel">Tax (0%)</span>
-                <strong id="previewTax">MAD 0.00</strong>
-              </div>
-
-              <div class="grand-total">
-                <span>Total</span>
-                <strong id="previewTotal">MAD 0.00</strong>
-              </div>
-            </div>
-          </div>
-
-          <footer class="invoice-footer">
-            <span>Generated with DueGrove</span>
-            <span id="previewCurrency">MAD</span>
-          </footer>
+        <article class="feature-card">
+          <span class="feature-number">06</span>
+          <h3>PDF export</h3>
+          <p>Download your finished invoice as a polished PDF that is ready to send to your client.</p>
         </article>
       </div>
-    </aside>
-  </main>
+    </section>
 
-  <div class="drawer-overlay" id="drawerOverlay" hidden></div>
-
-  <aside class="saved-drawer" id="savedDrawer" aria-hidden="true">
-    <div class="saved-drawer-header">
-      <div>
-        <p class="eyebrow">Local drafts</p>
-        <h2>Saved invoices</h2>
-        <p>Stored only in this browser on this device.</p>
+    <section class="section how-section" id="how-it-works">
+      <div class="section-heading">
+        <p class="eyebrow">How it works</p>
+        <h2>From blank page to finished invoice.</h2>
       </div>
 
-      <button
-        class="drawer-close"
-        id="closeSavedDrawer"
-        type="button"
-        aria-label="Close saved invoices"
-      >
-        ×
-      </button>
+      <div class="steps">
+        <div class="step">
+          <span>1</span>
+          <div>
+            <h3>Add your details</h3>
+            <p>Enter your business, client, invoice dates, items, rates, tax, and notes.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <span>2</span>
+          <div>
+            <h3>Choose your style</h3>
+            <p>Pick the invoice look that best fits your work: Grove, Ledger, or Minimal.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <span>3</span>
+          <div>
+            <h3>Save or export</h3>
+            <p>Keep the draft locally for later, or download the invoice as a PDF immediately.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section privacy-section" id="privacy">
+      <div class="privacy-card">
+        <div>
+          <p class="eyebrow">Built with privacy in mind</p>
+          <h2>Your invoice data stays in your browser.</h2>
+        </div>
+
+        <div class="privacy-copy">
+          <p>
+            DueGrove V1.4 does not use user accounts or a cloud database. Saved invoices,
+            saved clients, business defaults, and logos are stored locally in your browser on your device.
+          </p>
+          <p>
+            Clearing browser site data can remove those saved items, and they do not currently sync between devices.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq-section" id="faq">
+      <div class="section-heading">
+        <p class="eyebrow">FAQ</p>
+        <h2>Good to know before you start.</h2>
+      </div>
+
+      <div class="faq-list">
+        <details>
+          <summary>Do I need an account?</summary>
+          <p>No. DueGrove currently works without signup or login.</p>
+        </details>
+
+        <details>
+          <summary>Where are my invoices saved?</summary>
+          <p>Saved drafts are stored in your browser's local storage on the device you are using.</p>
+        </details>
+
+        <details>
+          <summary>Can I use DueGrove on my phone?</summary>
+          <p>Yes. The builder is responsive and works on desktop, tablet, and mobile browsers.</p>
+        </details>
+
+        <details>
+          <summary>Does DueGrove support multiple currencies?</summary>
+          <p>Yes. The current version supports MAD, USD, EUR, GBP, and CAD.</p>
+        </details>
+
+        <details>
+          <summary>Can I upload my business logo?</summary>
+          <p>Yes. PNG, JPG, JPEG, and WebP logos can be added and included in the invoice.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div>
+        <p class="eyebrow">Ready when you are</p>
+        <h2>Create your next invoice in minutes.</h2>
+        <p>No account. No setup wizard. Just the invoice you need.</p>
+      </div>
+
+      <a class="button button-primary" href="app/">Create an invoice</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <a class="brand footer-brand" href="#top">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" role="img">
+            <path d="M34.7 10.2C26.1 10.6 18.4 14 14.3 20.1c-3.7 5.5-3.2 11.3-2.6 14.1 3.7-1.8 7.8-4.7 11.4-8.3 4.4-4.4 7.6-9.3 9.4-13.4-1.8 4.6-5.2 10.1-10 15-3.2 3.2-6.6 5.8-9.8 7.7 3.1 2.4 8.1 3.5 13.2 1.3 8.1-3.4 11.7-13.8 8.8-26.3Z"/>
+          </svg>
+        </span>
+        <span>DueGrove</span>
+      </a>
+
+      <p>Invoices, thoughtfully made.</p>
     </div>
 
-    <div class="saved-list" id="savedInvoicesList"></div>
-
-    <div class="saved-empty" id="savedEmpty">
-      <div class="saved-empty-icon">⌁</div>
-      <h3>No saved invoices yet</h3>
-      <p>Build an invoice and press “Save Invoice” to keep a draft here.</p>
+    <div class="footer-links">
+      <a href="app/">Invoice app</a>
+      <a href="#privacy">Privacy</a>
+      <a
+        href="https://github.com/Aemi17/duegrove/issues/new?title=DueGrove%20feedback"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Send feedback</a>
     </div>
-  </aside>
-
-  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-
+  </footer>
 </body>
 </html>
