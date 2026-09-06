@@ -648,19 +648,49 @@ main {
     font-size: clamp(3.4rem, 17vw, 5.2rem);
   }
 
+  .hero-visual {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
   .preview-window {
+    width: 100%;
     padding: 8px;
     border-radius: 18px;
     transform: none;
   }
 
   .invoice-card {
-    min-width: 560px;
+    width: 100%;
+    min-width: 0;
+    min-height: 420px;
+    padding: 30px 22px 26px;
   }
 
-  .hero-visual {
-    overflow-x: auto;
-    padding-bottom: 8px;
+  .invoice-card-head,
+  .invoice-bill-row {
+    gap: 14px;
+  }
+
+  .invoice-heading strong {
+    font-size: 1.15rem;
+  }
+
+  .mini-table-head,
+  .mini-table-row {
+    grid-template-columns: minmax(0, 1fr) 38px 82px;
+    gap: 6px;
+  }
+
+  .mini-table-head,
+  .mini-table-row {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .invoice-total {
+    width: 165px;
   }
 
   .feature-grid,
